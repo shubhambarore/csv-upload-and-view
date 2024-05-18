@@ -92,7 +92,7 @@ const CreateTable = () => {
         total: jsonRecords.length,
       });
     }
-    setProgress(0);
+    setProgress(progressInitialState);
     setUploadRecordsStatus((prev) => ({ ...prev, loading: false, success: true }));
   };
 
@@ -134,11 +134,7 @@ const CreateTable = () => {
 
   const handleChangeFile = (file) => {
     setFile(file);
-    setProgress((prev) => ({
-      percent: 0,
-      records: 0,
-      total: 0,
-    }));
+    setProgress(progressInitialState);
     Papa.parse(file, {
       complete: (result) => {
         handleCreateTableInDB(result.data);
@@ -149,14 +145,19 @@ const CreateTable = () => {
 
   const handleViewJustCreatedTable = () => {
     navigate(`/view-table/${createTableStatus.tableId}`);
+    handleResetComponent();
   };
 
-  const handleResetComponent = () => {
-    handleClose();
+  const handleClickBack = () => {
     setProgress(progressInitialState);
     setCreateTableStatus(createTableInitialStatus);
     setUploadRecordsStatus(uplaodRecordInitialStatus);
     setFile(fileInitialState);
+  };
+
+  const handleResetComponent = () => {
+    handleClose();
+    handleClickBack();
   };
 
   return (
@@ -188,6 +189,7 @@ const CreateTable = () => {
                       variant="none"
                       sx={{ color: "#707684" }}
                       startIcon={<KeyboardBackspaceOutlined />}
+                      onClick={handleClickBack}
                     >
                       <p className="text-gray-500">Back</p>
                     </Button>
@@ -222,9 +224,11 @@ const CreateTable = () => {
                         {progress.records} of {progress.total}
                       </p>
                     </div>
-                    <div className="w-full">
-                      <LinearProgress variant="determinate" value={progress.percent} />
-                    </div>
+                    {progress.percent && (
+                      <div className="w-full">
+                        <LinearProgress variant="determinate" value={progress.percent} />
+                      </div>
+                    )}
                   </div>
                   <IconButton>
                     <ClearOutlined />

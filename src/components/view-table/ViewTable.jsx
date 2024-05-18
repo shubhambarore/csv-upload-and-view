@@ -63,25 +63,28 @@ const ViewTable = () => {
     }
   }, [tableId, searchParams]);
 
-  if (!tableId) {
+  //   if (!tableId) {
+  //     return (
+  //       <div className="min-h-screen w-full flex flex-col justify-center items-center">
+  //         <DescriptionOutlined sx={{ color: "#a7a7a7" }} fontSize="large" />
+  //         <p className="text-gray-400">Select a file to view content</p>
+  //       </div>
+  //     );
+  //   }
+
+  if (tableData?.success && tableData?.records?.length == 0) {
     return (
-      <div className="min-h-screen w-full flex flex-col justify-center items-center">
-        <DescriptionOutlined sx={{ color: "#a7a7a7" }} fontSize="large" />
-        <p className="text-gray-400">Select a file to view content</p>
-      </div>
+      <div className="flex flex-col items-center justify-center min-h-screen">Empty table...</div>
     );
   }
 
   return (
     <div className="w-full overflow-auto">
       {tableData?.loading && (
-        <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center justify-center min-h-screen gap-2">
           <CircularProgress />
-          <p>Loading Records</p>
+          <p>Loading Records...</p>
         </div>
-      )}
-      {tableData?.records?.length === 0 && (
-        <div className="flex flex-col items-center justify-center min-h-screen">Empty table...</div>
       )}
       <TableContainer component={Paper} className="h-[90vh] overflow-auto bg-red-500">
         <Table size="small">
