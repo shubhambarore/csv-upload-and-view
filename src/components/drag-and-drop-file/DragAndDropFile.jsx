@@ -10,9 +10,7 @@
 
 // export default FileUploader;
 
-import { UploadFile } from "@mui/icons-material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
+import { InsertDriveFile, InsertDriveFileOutlined, UploadFile } from "@mui/icons-material";
 
 const DragAndDropFile = ({ value, onChange, accept }) => {
   const handleDrop = (event) => {
@@ -44,6 +42,27 @@ const DragAndDropFile = ({ value, onChange, accept }) => {
     onChange(null);
   };
 
+  const getFileSizeInMB = (bytes) => {
+    if (!isNaN(bytes)) {
+      return (bytes / (1024 * 1024)).toFixed(2);
+    }
+    return "";
+  };
+
+  if (value) {
+    return (
+      <div className="flex flex-row items-center gap-4 mt-3">
+        <div className="bg-gray-100 p-2 rounded">
+          <InsertDriveFileOutlined sx={{ color: "#a7a7a7" }} fontSize="large" />
+        </div>
+        <div>
+          <p className="text-xs text-gray-400">{value?.name}</p>
+          <p className="text-xs text-gray-400">{getFileSizeInMB(value?.size)} Mb</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <label
@@ -52,23 +71,14 @@ const DragAndDropFile = ({ value, onChange, accept }) => {
         onDragOver={handleDragOver}
       >
         <div className="flex flex-col items-center justify-center">
-          {value ? (
-            <div className="flex flex-row items-center justify-center gap-2 text-sm text-black">
-              <span>{value.name}</span>
-              <IconButton onClick={handleDeleteFile} aria-label="delete">
-                <DeleteIcon sx={{ color: "black" }} />
-              </IconButton>
-            </div>
-          ) : (
-            <>
-              <UploadFile />
-              <p className="text-gray-700 text-sm">
-                Drop your document here or{" "}
-                <span className="text-blue-500 font-bold">browse file</span>
-              </p>
-              <p className="text-gray-400 text-xs">Supported: CSV</p>
-            </>
-          )}
+          <>
+            <UploadFile />
+            <p className="text-gray-700 text-sm">
+              Drop your document here or{" "}
+              <span className="text-blue-500 font-bold">browse file</span>
+            </p>
+            <p className="text-gray-400 text-xs">Supported: CSV</p>
+          </>
         </div>
         <input
           id="dropzone-file"
