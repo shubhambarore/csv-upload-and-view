@@ -72,7 +72,6 @@ const DragAndDropFile = ({ value, onChange, accept }) => {
       >
         <div className="flex flex-col items-center justify-center">
           <>
-            <UploadFile />
             <p className="text-gray-700 text-sm">
               Drop your document here or{" "}
               <span className="text-blue-500 font-bold">browse file</span>

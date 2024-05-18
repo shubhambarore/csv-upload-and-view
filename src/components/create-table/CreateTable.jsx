@@ -24,6 +24,7 @@ const style = {
 
 const CreateTable = () => {
   const navigate = useNavigate();
+  // const [abortUploadRecord, setAbortUploadRecord] = useState(false);
   const [openCreateTableModal, setOpenCreateTableModal] = useState(false);
   const handleOpen = () => setOpenCreateTableModal(true);
   const handleClose = () => setOpenCreateTableModal(false);
@@ -164,7 +165,7 @@ const CreateTable = () => {
     <div className="w-full p-2">
       <div>
         <Modal
-          open={openCreateTableModal}
+          open={openCreateTableModal || createTableStatus?.loading || uploadRecordsStatus?.loading}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
