@@ -50,9 +50,12 @@ const CreateTable = () => {
   const [createTableStatus, setCreateTableStatus] = useState(createTableInitialStatus);
   const [uploadRecordsStatus, setUploadRecordsStatus] = useState(uplaodRecordInitialStatus);
 
+  const [abortController, setAbortController] = useState(null);
+  const [abortUpload, setAbortUpload] = useState(false);
+
   const [file, setFile] = useState(fileInitialState);
 
-  const uploadRecordsToTableInDB = async (tableId, records) => {
+  const uploadRecordsToTableInDB = async (tableId, records, signal) => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
@@ -61,6 +64,7 @@ const CreateTable = () => {
         "Content-Type": "application/json",
       },
       data: { records },
+      signal: signal,
     };
     try {
       const res = await axios.request(config);
@@ -85,8 +89,15 @@ const CreateTable = () => {
     }
     setUploadRecordsStatus((prev) => ({ ...prev, loading: true }));
     setProgress(0);
+
+    const controller = new AbortController();
+    setAbortController(controller);
+
     for (let i = 0; i < groupedJson.length; i++) {
-      await uploadRecordsToTableInDB(tableId, groupedJson[i]);
+      if (abortUpload) {
+        break;
+      }
+      await uploadRecordsToTableInDB(tableId, groupedJson[i], controller.signal);
       setProgress({
         percent: ((i + 1) * 100) / groupedJson.length,
         records: i * 100 + groupedJson[i].length,
@@ -154,11 +165,22 @@ const CreateTable = () => {
     setCreateTableStatus(createTableInitialStatus);
     setUploadRecordsStatus(uplaodRecordInitialStatus);
     setFile(fileInitialState);
+
+    handleCancelUpload();
+    setAbortController(null);
+    setAbortUpload(false);
   };
 
   const handleResetComponent = () => {
     handleClose();
     handleClickBack();
+  };
+
+  const handleCancelUpload = () => {
+    if (abortController) {
+      setAbortUpload(true);
+      abortController.abort();
+    }
   };
 
   return (
@@ -181,7 +203,12 @@ const CreateTable = () => {
                 </div>
               )}
               {!createTableStatus.loading && !uploadRecordsStatus.loading && (
-                <DragAndDropFile value={file} onChange={handleChangeFile} accept=".csv,text/csv" />
+                <DragAndDropFile
+                  abortUpload={abortUpload}
+                  value={file}
+                  onChange={handleChangeFile}
+                  accept=".csv,text/csv"
+                />
               )}
               {uploadRecordsStatus.success && (
                 <div className="flex flex-row items-center justify-between mt-4">
@@ -206,7 +233,11 @@ const CreateTable = () => {
                       </Button>
                     </div>
                     <div>
-                      <Button variant="contained" onClick={handleViewJustCreatedTable}>
+                      <Button
+                        disabled={abortUpload}
+                        variant="contained"
+                        onClick={handleViewJustCreatedTable}
+                      >
                         View File
                       </Button>
                     </div>
@@ -221,9 +252,11 @@ const CreateTable = () => {
                       <p className="text-xs text-gray-500 max-w-[200px] text-ellipsis">
                         {file?.name}
                       </p>
-                      <p className="text-xs text-gray-500">
-                        {progress.records} of {progress.total}
-                      </p>
+                      {progress.records && (
+                        <p className="text-xs text-gray-500">
+                          {progress.records} of {progress.total}
+                        </p>
+                      )}
                     </div>
                     {progress.percent && (
                       <div className="w-full">
@@ -231,7 +264,7 @@ const CreateTable = () => {
                       </div>
                     )}
                   </div>
-                  <IconButton>
+                  <IconButton onClick={handleCancelUpload}>
                     <ClearOutlined />
                   </IconButton>
                 </div>

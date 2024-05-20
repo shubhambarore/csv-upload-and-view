@@ -10,9 +10,14 @@
 
 // export default FileUploader;
 
-import { InsertDriveFile, InsertDriveFileOutlined, UploadFile } from "@mui/icons-material";
+import {
+  ErrorOutline,
+  InsertDriveFile,
+  InsertDriveFileOutlined,
+  UploadFile,
+} from "@mui/icons-material";
 
-const DragAndDropFile = ({ value, onChange, accept }) => {
+const DragAndDropFile = ({ value, onChange, accept, abortUpload }) => {
   const handleDrop = (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
@@ -53,11 +58,17 @@ const DragAndDropFile = ({ value, onChange, accept }) => {
     return (
       <div className="flex flex-row items-center gap-4 mt-3">
         <div className="bg-gray-100 p-2 rounded">
-          <InsertDriveFileOutlined sx={{ color: "#a7a7a7" }} fontSize="large" />
+          {abortUpload ? (
+            <ErrorOutline sx={{ color: "red" }} fontSize="large" />
+          ) : (
+            <InsertDriveFileOutlined sx={{ color: "#a7a7a7" }} fontSize="large" />
+          )}
         </div>
         <div>
           <p className="text-xs text-gray-400">{value?.name}</p>
-          <p className="text-xs text-gray-400">{getFileSizeInMB(value?.size)} Mb</p>
+          <p className={`text-xs  ${abortUpload ? "text-red-400" : "text-gray-400"}`}>
+            {getFileSizeInMB(value?.size)} Mb
+          </p>
         </div>
       </div>
     );
