@@ -63,15 +63,6 @@ const ViewTable = () => {
     }
   }, [tableId, searchParams]);
 
-  //   if (!tableId) {
-  //     return (
-  //       <div className="min-h-screen w-full flex flex-col justify-center items-center">
-  //         <DescriptionOutlined sx={{ color: "#a7a7a7" }} fontSize="large" />
-  //         <p className="text-gray-400">Select a file to view content</p>
-  //       </div>
-  //     );
-  //   }
-
   if (tableData?.success && tableData?.records?.length == 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">Empty table...</div>

@@ -187,6 +187,7 @@ const CreateTable = () => {
     <div className="w-full p-2">
       <div>
         <Modal
+          id="create-table-modal"
           open={openCreateTableModal || createTableStatus?.loading || uploadRecordsStatus?.loading}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -194,8 +195,12 @@ const CreateTable = () => {
         >
           <Box sx={style}>
             <div className="flex flex-col gap-2">
-              <p className="text-sm font-bold">Upload CSV</p>
-              <p className="text-xs">Drag and Drop the csv file that you want to view</p>
+              <p data-cy="modal-heading" className="text-sm font-bold">
+                Upload CSV
+              </p>
+              <p data-cy="modal-description" className="text-xs">
+                Drag and Drop the csv file that you want to view
+              </p>
               {createTableStatus.loading && (
                 <div className="flex flex-row items-center justify-center min-h-[100px] gap-2">
                   <p className="text-xs">Creating Table...</p>
@@ -225,6 +230,7 @@ const CreateTable = () => {
                   <div className="flex flex-row items-center justify-between gap-4">
                     <div className="border border-gray-200 rounded">
                       <Button
+                        id="modal-cancel-button"
                         variant="none"
                         sx={{ color: "#707684" }}
                         onClick={handleResetComponent}
@@ -273,7 +279,14 @@ const CreateTable = () => {
           </Box>
         </Modal>
       </div>
-      <Button onClick={handleOpen} startIcon={<Add />} variant="contained" size="small" fullWidth>
+      <Button
+        data-cy="create-table-button"
+        onClick={handleOpen}
+        startIcon={<Add />}
+        variant="contained"
+        size="small"
+        fullWidth
+      >
         Create Table
       </Button>
     </div>

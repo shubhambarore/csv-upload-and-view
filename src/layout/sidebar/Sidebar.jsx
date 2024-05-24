@@ -8,7 +8,9 @@ const Sidebar = () => {
     <div className="flex flex-col justify-between min-h-screen items-center">
       <div className="w-full">
         <div className="w-full">
-          <p className="text-left w-full p-2">CSV Viewer</p>
+          <p data-cy="sidebar-title" className="text-left w-full p-2">
+            CSV Viewer
+          </p>
           <Divider />
         </div>
         <div className="w-full mt-2">

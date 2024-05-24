@@ -16,8 +16,10 @@ import {
   InsertDriveFileOutlined,
   UploadFile,
 } from "@mui/icons-material";
+import { useRef } from "react";
 
-const DragAndDropFile = ({ value, onChange, accept, abortUpload }) => {
+const DragAndDropFile = ({ value, onChange, accept, abortUpload, id }) => {
+  const inputFileRef = useRef();
   const handleDrop = (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
@@ -75,29 +77,27 @@ const DragAndDropFile = ({ value, onChange, accept, abortUpload }) => {
   }
 
   return (
-    <div>
-      <label
-        className="flex flex-col items-center justify-center w-full border-2 border-gray-200 border-dashed rounded cursor-pointer bg-gray-50 p-6"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
-        <div className="flex flex-col items-center justify-center">
-          <>
-            <p className="text-gray-700 text-sm">
-              Drop your document here or{" "}
-              <span className="text-blue-500 font-bold">browse file</span>
-            </p>
-            <p className="text-gray-400 text-xs">Supported: CSV</p>
-          </>
-        </div>
-        <input
-          id="dropzone-file"
-          type="file"
-          className="hidden"
-          onChange={handleUploadFileManually}
-          accept={accept}
-        />
-      </label>
+    <div
+      id="dropzone-file"
+      onClick={() => inputFileRef.current.click()}
+      className="flex flex-col items-center justify-center w-full border-2 border-gray-200 border-dashed rounded cursor-pointer bg-gray-50 p-6"
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+    >
+      <div className="flex flex-col items-center justify-center">
+        <p className="text-gray-700 text-sm">
+          Drop your document here or
+          <span className="text-blue-500 font-bold ml-1">browse file</span>
+        </p>
+        <p className="text-gray-400 text-xs">Supported: CSV</p>
+      </div>
+      <input
+        ref={inputFileRef}
+        type="file"
+        className="hidden"
+        onChange={handleUploadFileManually}
+        accept={accept}
+      />
     </div>
   );
 };
