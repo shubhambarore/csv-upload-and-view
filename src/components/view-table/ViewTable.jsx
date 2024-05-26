@@ -30,23 +30,25 @@ const ViewTable = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchTableRecordsFromDB = async (id, pageNumber) => {
-    setColumns(null);
-    setTableData((prev) => ({ ...prev, loading: true, records: null }));
-    try {
-      const res = await axios.get(`http://5.161.210.217:3000/table/${id}?page=${pageNumber}`);
-      let { page, records, totalPages } = res.data;
-      setTableData((prev) => ({ ...prev, loading: false, success: true, records: records }));
-      setTotalPages(totalPages);
-      if (records.length > 0) {
-        setColumns(Object.keys(records[0]));
+    if (pageNumber) {
+      setColumns(null);
+      setTableData((prev) => ({ ...prev, loading: true, records: null }));
+      try {
+        const res = await axios.get(`http://5.161.210.217:3000/table/${id}?page=${pageNumber}`);
+        let { page, records, totalPages } = res.data;
+        setTableData((prev) => ({ ...prev, loading: false, success: true, records: records }));
+        setTotalPages(totalPages);
+        if (records.length > 0) {
+          setColumns(Object.keys(records[0]));
+        }
+      } catch (err) {
+        setTableData((prev) => ({
+          ...prev,
+          loading: false,
+          success: false,
+          failure: true,
+        }));
       }
-    } catch (err) {
-      setTableData((prev) => ({
-        ...prev,
-        loading: false,
-        success: false,
-        failure: true,
-      }));
     }
   };
 

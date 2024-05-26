@@ -223,6 +223,7 @@ const CreateTable = () => {
                       sx={{ color: "#707684" }}
                       startIcon={<KeyboardBackspaceOutlined />}
                       onClick={handleClickBack}
+                      id="modal-back-button"
                     >
                       <p className="text-gray-500">Back</p>
                     </Button>
@@ -240,6 +241,7 @@ const CreateTable = () => {
                     </div>
                     <div>
                       <Button
+                        id="view-file-button"
                         disabled={abortUpload}
                         variant="contained"
                         onClick={handleViewJustCreatedTable}
@@ -270,7 +272,7 @@ const CreateTable = () => {
                       </div>
                     )}
                   </div>
-                  <IconButton onClick={handleCancelUpload}>
+                  <IconButton onClick={handleCancelUpload} id="cancel-upload-button">
                     <ClearOutlined />
                   </IconButton>
                 </div>
